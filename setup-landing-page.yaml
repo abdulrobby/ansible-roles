@@ -1,0 +1,8 @@
+- name: Setup Landing Page Server
+  hosts: apps
+  become: yes
+
+  roles:
+  - roles/common
+  - roles/nginx
+  - roles/landing-page

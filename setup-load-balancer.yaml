@@ -1,0 +1,15 @@
+- name: Setup Load Balancer Server
+  hosts: load-balancer
+  become: yes
+
+  roles:
+  - roles/common
+  - roles/nginx
+  - role: roles/load-balancer
+    vars:
+      domain: landing-page.abdulrobby.me
+      server:
+      - host: 34.101.56.31
+        name: web-server-1
+      - host: 34.101.237.14
+        name: web-server-2

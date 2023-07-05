@@ -1,0 +1,52 @@
+- name: install dependency
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - php-fpm
+  - php-mysql
+  - php-gd
+  - php-zip
+
+- name: create folder landing Page
+  file:
+    path: /var/www/landing-page.abdulrobby.me/html
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: delete default nginx configuration
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+  - /etc/nginx/sites-available/default
+  - /etc/nginx/sites-enabled/default
+
+- name: copy default nginx config
+  copy:
+    src:  files/default
+    dest: /etc/nginx/sites-available/default
+
+- name: create symlink sites-available to sites-enabled
+  file:
+    src: /etc/nginx/sites-available/default
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+  notify: restart nginx
+
+- name: git safe directory
+  shell: git config --global --add safe.directory /var/www/landing-page.abdulrobby.me/html
+
+- name: clone code app from github
+  git:
+    repo: https://github.com/adhithia21/sample-php.git
+    dest: /var/www/landing-page.abdulrobby.me/html
+    force: yes
+
+- name: copy database.php config
+  template:
+    src: templates/database.php.j2
+    dest: /var/www/landing-page.abdulrobby.me/html/application/config/database.php
+  

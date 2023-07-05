@@ -1,0 +1,19 @@
+- name: delete default nginx configuration
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+  - /etc/nginx/sites-available/default
+  - /etc/nginx/sites-enabled/default
+
+- name: copy default nginx config
+  template:
+    src:  templates/default.j2
+    dest: /etc/nginx/sites-available/default
+
+- name: create symlink sites-available to sites-enabled
+  file:
+    src: /etc/nginx/sites-available/default
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+  notify: restart nginx

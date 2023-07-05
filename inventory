@@ -1,0 +1,13 @@
+[database]
+34.101.238.87
+
+[load-balancer]
+34.128.73.188
+
+[apps]
+34.101.56.31
+34.101.237.14
+
+[all:vars]
+ansible_user=ghonia
+ansible_ssh_common_args=' -o StrictHostKeyChecking=no'
